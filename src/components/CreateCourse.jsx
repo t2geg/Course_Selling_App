@@ -9,6 +9,7 @@ const CreateCourse = () => {
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [imageLink, setImageLink] = useState("");
 
     return (
         <>
@@ -33,6 +34,10 @@ const CreateCourse = () => {
                     <TextField
                         onChange={(e) => setDescription(e.target.value)}
                         label="Description" variant="outlined" size='small' fullWidth={true} /> <br /> <br />
+                    <TextField
+                        onChange={(e) => setImageLink(e.target.value)}
+                        label="Image Link" variant="outlined" size='small' fullWidth={true} /> <br /> <br />
+
                     <Button
                         variant="contained"
                         size='medium'
@@ -44,7 +49,7 @@ const CreateCourse = () => {
                                         title,
                                         description,
                                         "price": 5999,
-                                        "imageLink": "",
+                                        "imageLink": imageLink,
                                         "published": true
                                     }
                                 ),
@@ -53,6 +58,8 @@ const CreateCourse = () => {
                                     "Authorization": "Bearer " + localStorage.getItem("token")
                                 }
                             })
+                                .then((res) => { return res.json(); })
+                                .then(() => alert("Course created successfully."))
                         }}
                     >Create</Button>
                 </Card>

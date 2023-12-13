@@ -21,8 +21,8 @@ try {
   USERS = [];
   COURSES = [];
 }
-console.log(ADMINS);
 
+// Authentication using JWT
 const SECRET = 'my-secret-key';
 
 const authenticateJwt = (req, res, next) => {
@@ -41,13 +41,15 @@ const authenticateJwt = (req, res, next) => {
   }
 };
 
+// request to know logged in user
 app.get('/admin/me', authenticateJwt, (req, res) => {
   res.json({
     username: req.user.username
   })
 })
 
-// Admin routes
+// Admin routes -----------------------------------------------------------------------------------------------------------
+// Route for Admin Signup
 app.post('/admin/signup', (req, res) => {
   const { username, password } = req.body;
   const admin = ADMINS.find(a => a.username === username);
@@ -62,6 +64,7 @@ app.post('/admin/signup', (req, res) => {
   }
 });
 
+// Admin login
 app.post('/admin/login', (req, res) => {
   const { username, password } = req.headers;
   const admin = ADMINS.find(a => a.username === username && a.password === password);
@@ -73,6 +76,7 @@ app.post('/admin/login', (req, res) => {
   }
 });
 
+// Create Course
 app.post('/admin/courses', authenticateJwt, (req, res) => {
   const course = req.body;
   course.id = COURSES.length + 1;
@@ -81,6 +85,7 @@ app.post('/admin/courses', authenticateJwt, (req, res) => {
   res.json({ message: 'Course created successfully', courseId: course.id });
 });
 
+// Edit or Update Course
 app.put('/admin/courses/:courseId', authenticateJwt, (req, res) => {
   const course = COURSES.find(c => c.id === parseInt(req.params.courseId));
   if (course) {
@@ -92,11 +97,15 @@ app.put('/admin/courses/:courseId', authenticateJwt, (req, res) => {
   }
 });
 
+//  Get Courses of Admin
 app.get('/admin/courses', authenticateJwt, (req, res) => {
   res.json({ courses: COURSES });
 });
 
+
+// -----------------------------------------------------------------------------------------
 // User routes
+// User Signup
 app.post('/users/signup', (req, res) => {
   const { username, password } = req.body;
   const user = USERS.find(u => u.username === username);
@@ -111,6 +120,7 @@ app.post('/users/signup', (req, res) => {
   }
 });
 
+// User Login
 app.post('/users/login', (req, res) => {
   const { username, password } = req.headers;
   const user = USERS.find(u => u.username === username && u.password === password);
@@ -122,10 +132,12 @@ app.post('/users/login', (req, res) => {
   }
 });
 
+// Get Courses
 app.get('/users/courses', authenticateJwt, (req, res) => {
   res.json({ courses: COURSES });
 });
 
+// Purchase Course
 app.post('/users/courses/:courseId', authenticateJwt, (req, res) => {
   const course = COURSES.find(c => c.id === parseInt(req.params.courseId));
   if (course) {
@@ -145,6 +157,7 @@ app.post('/users/courses/:courseId', authenticateJwt, (req, res) => {
   }
 });
 
+// Get purchased Course
 app.get('/users/purchasedCourses', authenticateJwt, (req, res) => {
   const user = USERS.find(u => u.username === req.user.username);
   if (user) {
