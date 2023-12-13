@@ -22,12 +22,12 @@ function ShowCourses() {
 
     return <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
         {courses.map(course => {
-            return <Course course={course} />
+            return <CourseCard course={course} />
         })}
     </div>
 }
 
-function Course(props) {
+export function CourseCard(props) {
     return <Card style={{
         margin: 10,
         width: 300,

@@ -102,6 +102,16 @@ app.get('/admin/courses', authenticateJwt, (req, res) => {
   res.json({ courses: COURSES });
 });
 
+// Get Course using CourseId
+
+app.get('/course/:courseId', authenticateJwt, (req, res) => {
+  let course = COURSES.find(c => c.id === parseInt(req.params.courseId));
+  if (course) {
+    res.json({ course });
+  }
+  else res.status(404).json({ message: "Course not Found" });
+})
+
 
 // -----------------------------------------------------------------------------------------
 // User routes
