@@ -2,6 +2,7 @@ import { Button, Card, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import { CourseCard } from './ShowCourses';
+import axios from 'axios';
 
 
 const Course = () => {
@@ -10,7 +11,7 @@ const Course = () => {
     const [course, setCourse] = useState("");
 
     useEffect(() => {
-        fetch(`http://localhost:3000/course/${courseId}`, {
+        fetch(`http://localhost:3000/admin/courses/${courseId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -75,10 +76,11 @@ function UpdateCard(props) {
                     variant="contained"
                     size='medium'
                     onClick={() => {
-                        fetch("http://localhost:3000/admin/courses/" + course.id, {
+                        fetch("http://localhost:3000/admin/courses/" + course._id, {
                             method: "PUT",
                             body: JSON.stringify(
                                 {
+                                    _id: course._id,
                                     title,
                                     description,
                                     "price": 5999,
@@ -94,7 +96,6 @@ function UpdateCard(props) {
                             .then((res) => { return res.json(); })
                             .then(() => {
                                 const updatedCourse = {
-                                    id: course.id,
                                     title: title,
                                     description: description,
                                     price: 5999,
