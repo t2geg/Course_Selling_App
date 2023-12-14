@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import { CourseCard } from './ShowCourses';
 
+
 const Course = () => {
 
     let { courseId } = useParams();
@@ -111,3 +112,7 @@ function UpdateCard(props) {
 }
 
 export default Course
+
+
+// In this re-rendering is happening of whole which is not needed
+// Just the updated component must be re-rendered 
