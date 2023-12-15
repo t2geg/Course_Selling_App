@@ -1,7 +1,6 @@
-import { Button, Card, TextField, Typography } from '@mui/material';
+import { Button, Card, Grid, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
-import { CourseCard } from './ShowCourses';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 
@@ -11,20 +10,17 @@ const Course = () => {
     const [course, setCourse] = useState("");
 
     useEffect(() => {
-        fetch(`http://localhost:3000/admin/courses/${courseId}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem("token")
-            }
-        })
-            .then((res) => {
-                return res.json();
-            })
-            .then((data) => {
-                console.log(data);
-                setCourse(data.course);
-            })
+
+        const fetch = async () => {
+            const res = await axios.get(`http://localhost:3000/admin/courses/${courseId}`, {
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("token"),
+                }
+            });
+            const data = res.data;
+            setCourse(data.course);
+        }
+        fetch();
     }, [])
 
     // while data is being fetched or data is not present wrong id
@@ -36,77 +32,109 @@ const Course = () => {
 
     return (
         <>
-            <div style={{
-                display: "flex", flexWrap: "wrap", justifyContent: "center", marginTop: 50
-            }}>
-                <CourseCard course={course} />
-                <UpdateCard course={course} courseId={courseId} setCourse={setCourse} />
-            </div>
+            <GrayTopper title={course.title} />
+            <Grid container>
+                <Grid item lg={8} md={12} sm={12}>
+                    <UpdateCard course={course} setCourse={setCourse} />
+                </Grid>
+
+                <Grid item lg={4} md={12} sm={12}>
+                    <CourseCard course={course} />
+                </Grid>
+
+            </Grid>
         </>
     )
 }
 
-function UpdateCard(props) {
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [imageLink, setImageLink] = useState("");
-    const course = props.course;
+
+function GrayTopper({ title }) {
+    return <div style={{ height: 250, background: "#212121", top: 0, width: "100vw", zIndex: 0, marginBottom: -250 }}>
+        <div style={{ height: 250, display: "flex", justifyContent: "center", flexDirection: "column" }}>
+            <div>
+                <Typography style={{ color: 'white', fontWeight: 600 }} variant="h3" textAlign={"center"}>
+                    {title}
+                </Typography>
+            </div>
+        </div>
+    </div>
+}
+
+function CourseCard({ course }) {
+    return <Card style={{
+        margin: 10,
+        width: 350,
+        minHeight: 200,
+        borderRadius: 20,
+        marginRight: 50,
+        paddingBottom: 15,
+        zIndex: 2
+    }}>
+        <img src={course.imageLink} alt="course-image" style={{ width: 350 }} />
+        <div style={{ marginLeft: 10 }}>
+            <Typography variant='h5'>{course.title}</Typography>
+            <Typography variant='subtitle2' style={{ color: "gray" }}>
+                Price
+            </Typography>
+            <Typography variant='subtitle1'>
+                <b>Rs {course.price}</b>
+            </Typography>
+        </div>
+    </Card >
+}
+
+function UpdateCard({ course, setCourse }) {
+    const [title, setTitle] = useState(course.title);
+    const [description, setDescription] = useState(course.description);
+    const [imageLink, setImageLink] = useState(course.imageLink);
+    const [price, setPrice] = useState(course.price);
 
     return (
-        <div style={{
-            display: "flex",
-            justifyContent: "center"
-        }}>
-            <Card variant="outlined" style={{
-                width: 400,
-                padding: 20
-            }}>
-                <Typography>Update Course details</Typography>
-                <TextField
-                    onChange={(e) => setTitle(e.target.value)}
-                    label="Title" variant="outlined" size='small' fullWidth={true} /> <br /><br />
-                <TextField
-                    onChange={(e) => setDescription(e.target.value)}
-                    label="Description" variant="outlined" size='small' fullWidth={true} /> <br /> <br />
-                <TextField
-                    onChange={(e) => setImageLink(e.target.value)}
-                    label="Image Link" variant="outlined" size='small' fullWidth={true} /> <br /><br />
+        <div style={{ display: "flex", justifyContent: "center" }}>
+            <Card variant="outlined" style={{ width: 500, marginTop: 200, marginLeft: -200 }}>
+                <div style={{ padding: 20 }}>
+                    <Typography style={{ marginBottom: 10 }}>Update Course details</Typography>
+                    <TextField
+                        value={title} style={{ marginBottom: 10 }} onChange={(e) => setTitle(e.target.value)}
+                        label="Title" variant="outlined" size='small' fullWidth={true} /> <br />
+                    <TextField
+                        value={description} style={{ marginBottom: 10 }} onChange={(e) => setDescription(e.target.value)}
+                        label="Description" variant="outlined" size='small' fullWidth={true} /> <br />
+                    <TextField
+                        value={imageLink} style={{ marginBottom: 10 }} onChange={(e) => setImageLink(e.target.value)}
+                        label="Image Link" variant="outlined" size='small' fullWidth={true} /> <br />
+                    <TextField
+                        value={price} style={{ marginBottom: 10 }} onChange={(e) => setPrice(e.target.value)}
+                        label="Price" variant="outlined" size='small' fullWidth={true} /> <br />
 
-                <Button
-                    variant="contained"
-                    size='medium'
-                    onClick={() => {
-                        fetch("http://localhost:3000/admin/courses/" + course._id, {
-                            method: "PUT",
-                            body: JSON.stringify(
-                                {
-                                    _id: course._id,
-                                    title,
-                                    description,
-                                    "price": 5999,
-                                    "imageLink": imageLink,
-                                    "published": true
+                    <Button
+                        variant="contained"
+                        size='medium'
+                        onClick={() => {
+
+                            axios.put("http://localhost:3000/admin/courses/" + course._id, {
+                                _id: course._id,
+                                title,
+                                description,
+                                price,
+                                "imageLink": imageLink,
+                                "published": true
+                            }, {
+                                headers: {
+                                    "Authorization": "Bearer " + localStorage.getItem("token")
                                 }
-                            ),
-                            headers: {
-                                "Content-Type": "application/json",
-                                "Authorization": "Bearer " + localStorage.getItem("token")
+                            });
+                            let updatedCourse = {
+                                title: title,
+                                description: description,
+                                price: price,
+                                imageLink: imageLink,
+                                published: true
                             }
-                        })
-                            .then((res) => { return res.json(); })
-                            .then(() => {
-                                const updatedCourse = {
-                                    title: title,
-                                    description: description,
-                                    price: 5999,
-                                    imageLink: imageLink,
-                                    published: true
-                                }
-                                props.setCourse(updatedCourse);
-                            }
-                            )
-                    }}
-                >Update Course</Button>
+                            setCourse(updatedCourse);
+                        }}
+                    >Update Course</Button>
+                </div>
             </Card>
         </div>
     )
@@ -116,4 +144,5 @@ export default Course
 
 
 // In this re-rendering is happening of whole which is not needed
-// Just the updated component must be re-rendered 
+// Just the updated component must be re-rendered
+// Thatswhy state management is important

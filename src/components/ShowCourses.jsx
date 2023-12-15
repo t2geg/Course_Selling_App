@@ -1,23 +1,24 @@
-import { Card, Typography } from "@mui/material";
+import { Button, Card, Typography } from "@mui/material";
+import axios from "axios";
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function ShowCourses() {
     const [courses, setCourses] = React.useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:3000/admin/courses", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem("token")
-            }
-        })
-            .then((res) => {
-                return res.json();
-            })
-            .then((data) => {
-                setCourses(data.courses);
-            })
+
+        const fetch = async () => {
+            const res = await axios.get("http://localhost:3000/admin/courses", {
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("token")
+                }
+            });
+            const data = res.data;
+            setCourses(data.courses);
+        }
+        fetch();
+
     }, [])
 
     return <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
@@ -27,7 +28,8 @@ function ShowCourses() {
     </div>
 }
 
-export function CourseCard(props) {
+function CourseCard(props) {
+    const navigate = useNavigate();
     return <Card style={{
         margin: 10,
         width: 300,
@@ -36,7 +38,19 @@ export function CourseCard(props) {
         <Typography textAlign={"center"} variant="h6">{props.course.title}</Typography>
         <Typography textAlign={"center"} variant="subtitle2">{props.course.description}</Typography>
         <img src={props.course.imageLink} alt="course-image" width={300} />
-    </Card>
+        <div style={{
+            display: "flex", justifyContent: "center", marginTop: 3
+        }}>
+            <Button
+                variant="contained"
+                size='medium'
+                onClick={() => {
+                    navigate("/course/" + props.course._id)
+                }}
+            >Edit</Button>
+
+        </div>
+    </Card >
 }
 
 export default ShowCourses;
