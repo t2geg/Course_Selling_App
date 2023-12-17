@@ -3,10 +3,12 @@ import Button from '@mui/material/Button';
 import { TextField, Typography } from '@mui/material';
 import Card from '@mui/material/Card';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
     return (
         <>
@@ -45,7 +47,7 @@ const SignUp = () => {
                             });
                             const data = res.data;
                             localStorage.setItem("token", data.token);
-                            window.location = '/'
+                            navigate('/');
                         }}
                     >SignUp</Button>
                 </Card>

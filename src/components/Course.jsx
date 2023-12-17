@@ -49,7 +49,7 @@ const Course = () => {
 
 
 function GrayTopper({ title }) {
-    return <div style={{ height: 250, background: "#212121", top: 0, width: "100vw", zIndex: 0, marginBottom: -250 }}>
+    return <div style={{ marginLeft: 0, height: 250, background: "#212121", top: 0, width: "100vw", zIndex: 0, marginBottom: -250 }}>
         <div style={{ height: 250, display: "flex", justifyContent: "center", flexDirection: "column" }}>
             <div>
                 <Typography style={{ color: 'white', fontWeight: 600 }} variant="h3" textAlign={"center"}>
@@ -67,6 +67,7 @@ function CourseCard({ course }) {
         minHeight: 200,
         borderRadius: 20,
         marginRight: 50,
+        marginTop: 150,
         paddingBottom: 15,
         zIndex: 2
     }}>
@@ -91,7 +92,7 @@ function UpdateCard({ course, setCourse }) {
 
     return (
         <div style={{ display: "flex", justifyContent: "center" }}>
-            <Card variant="outlined" style={{ width: 500, marginTop: 200, marginLeft: -200 }}>
+            <Card variant="outlined" style={{ width: 450, marginTop: 200 }}>
                 <div style={{ padding: 20 }}>
                     <Typography style={{ marginBottom: 10 }}>Update Course details</Typography>
                     <TextField

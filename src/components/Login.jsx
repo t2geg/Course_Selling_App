@@ -9,19 +9,6 @@ const Login = () => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
 
-    // const handleOnClick = (email, password) => {
-    //     fetch("http://localhost:3000/admin/login", {
-    //         method: "POST",
-    //         headers: {
-    //             username: email,
-    //             password: password
-    //         }
-    //     }).then((res) => {
-    //         return res.json();
-    //     }).then((data) => { localStorage.setItem("token", data.token) });
-    // }
-
-
     return (
         <>
             <div style={{

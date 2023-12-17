@@ -1,12 +1,13 @@
 import { BrowserRouter as Router, Routes, Route, useNavigate, BrowserRouter } from 'react-router-dom';
 import Login from './components/Login';
-import Landing from "./components/Landing";
+import Landing from './components/Landing'
 import CreateCourse from './components/CreateCourse';
 import Register from './components/Register';
 import ShowCourses from './components/ShowCourses';
 import SignUp from './components/SignUp'
 import AppBar from './components/AppBar';
 import Course from './components/Course';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 // This file shows how you can do routing in React.
 // Try going to /login, /register, /about, /courses on the website and see how the html changes
@@ -31,5 +32,6 @@ function App() {
         </>
     );
 }
+
 
 export default App;
